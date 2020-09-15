@@ -1,0 +1,92 @@
+{
+  "name": "auto-insert-comma",
+	"displayName": "auto-insert-comma",
+	"description": "Automatically insert JSON/javascript Object comma.",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.49.0"
+	},
+	"categories": [
+		"Other",
+		"Programming Languages"
+	],
+	"activationEvents": [
+		"*",
+    "onCommand:auto-insert-comma.insertComma"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "auto-insert-comma.insertComma",
+				"title": "Insert Comma"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "auto-insert-comma.insertComma",
+				"key": "alt+,",
+				"mac": "cmd+alt+,"
+			}
+		],
+		"configuration": {
+			"type": "object",
+			"title": "Auto Insert Comma configuration",
+			"properties": {
+				"auto-insert-comma.activationFiles": {
+					"type": "array",
+					"default": [
+						"json", 
+						"html", 
+						"javascript", 
+						"typescript", 
+						"vue", 
+						"javascriptreact", 
+						"typescriptreact", 
+						"php", 
+						"ejs", 
+						"jinja", 
+						"plaintext", 
+						"markdown",
+						"python"
+					],
+					"description": "Set the files will be activated.",
+					"scope": "resource"
+				},
+				"auto-insert-comma.disableFiles": {
+					"type": "array",
+					"default": [],
+					"description": "Set the files will be disabled",
+					"scope": "resource"
+				},
+				"auto-insert-comma.enableAutoInsertComma": {
+					"type": "boolean",
+					"default": true,
+					"description": "Enable AutoInsertComma.",
+					"scope": "resource"
+				}
+			}
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "yarn run compile",
+		"compile": "tsc -p ./",
+		"lint": "eslint src --ext ts",
+		"watch": "tsc -watch -p ./",
+		"pretest": "yarn run compile && yarn run lint",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.49.0",
+		"@types/glob": "^7.1.3",
+		"@types/mocha": "^8.0.0",
+		"@types/node": "^14.0.27",
+		"eslint": "^7.6.0",
+		"@typescript-eslint/eslint-plugin": "^3.8.0",
+		"@typescript-eslint/parser": "^3.8.0",
+		"glob": "^7.1.6",
+		"mocha": "^8.1.3",
+		"typescript": "^4.0.2",
+		"vscode-test": "^1.4.0"
+	}
+}
