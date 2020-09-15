@@ -44,4 +44,8 @@ Default value.
 }
 ```
 
-**Enjoy!**
+## License
+
+[MIT](https://github.com/AcerFeng/vscode-auto-insert-comma/blob/master/LICENSE) License
+
+Copyright (c) 2020 AcerFeng
