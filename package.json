@@ -1,8 +1,10 @@
 {
   "name": "auto-insert-comma",
-	"displayName": "auto-insert-comma",
+	"displayName": "Auto Insert Comma",
 	"description": "Automatically insert JSON/javascript Object comma.",
 	"version": "0.0.1",
+	"publisher": "LeonQin",
+	"icon": "images/logo.png",
 	"engines": {
 		"vscode": "^1.49.0"
 	},
@@ -10,6 +12,28 @@
 		"Other",
 		"Programming Languages"
 	],
+	"keywords": [
+		"AutoComplete",
+		"json",
+		"insert",
+		"comma",
+		"javascript",
+		"typescript",
+		"vue",
+		"react",
+		"python",
+		"php",
+		"html"
+	],
+	"bugs": {
+		"url": "https://github.com/AcerFeng/vscode-auto-insert-comma/issues",
+		"email": "leonqinskr@gmail.com"
+	},
+	"homepage": "https://github.com/AcerFeng/vscode-auto-insert-comma",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/AcerFeng/vscode-auto-insert-comma.git"
+	},
 	"activationEvents": [
 		"*",
     "onCommand:auto-insert-comma.insertComma"
