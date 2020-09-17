@@ -2,7 +2,7 @@
   "name": "auto-insert-comma",
 	"displayName": "Auto Insert Comma",
 	"description": "Automatically insert JSON/javascript Object comma.",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"publisher": "LeonQin",
 	"icon": "images/logo.png",
 	"engines": {
