@@ -85,7 +85,7 @@ function handleInsert(isInsertToPreLine = false) {
 		return
 	}
 	const strateFn = strategies[languageId] || defaultLineCommentFilter
-	const lineStr = strateFn(line.text.trim())
+	let lineStr = strateFn(line.text.trim())
 	if (excludedEndChars.indexOf(lineStr[lineStr.length - 1]) !== -1) {
 		return
 	}
@@ -121,17 +121,29 @@ function handleInsert(isInsertToPreLine = false) {
 	let lastLineStr = strateFn(lastLine.text.trim())
 	let currentLineEndChar = lineStr[lineStr.length - 1]
 	let lastLineEndChar = lastLineStr[lastLineStr.length - 1]
-	if (lastLineEndChar === ',') {
+
+	if (hasSpecialStr(lineStr) || lineStr.endsWith('+')) {
+		return
+	}
+
+	if (lastLineEndChar === ',' || lastLineEndChar === '[') {
 		insertComma(editor, insertPosition)
 	} else if (currentLineEndChar === '}' || currentLineEndChar === ']') {
 		const charMap = {
 			'}': '{',
 			']': '['
 		}
+		if (lineStr.includes(charMap[currentLineEndChar])) {
+			return
+		}
 		const lastLP = findPosition(currentLineEndChar, charMap[currentLineEndChar], editor!, selection!, strateFn, isInsertToPreLine)
 		if (lastLP) {
+			lineStr = strateFn(editor.document.lineAt(lastLP).text.trim())
+			if (hasSpecialStr(lineStr)) {
+				return
+			}
 			const lastLastLinePosition = lastLP.translate(-1)
-			const lll = editor?.document.lineAt(lastLastLinePosition)
+			const lll = editor.document.lineAt(lastLastLinePosition)
 			const lllStr = (lll && strateFn(lll.text.trim())) || ''
 			if (lllStr) {
 				if (lllStr.endsWith(',')) {
@@ -164,9 +176,18 @@ function insertComma(editor: vscode.TextEditor, position: vscode.Position) {
 	})
 }
 
+function hasSpecialStr(lineStr: string) {
+	const specials = ['=', '`', 'for(', 'for (', 'if(', 'if (', 'else {', 'do{', 'do {', 'while(', 'while (', 'switch(', 'switch (']
+	for (let i = 0; i < specials.length; i++) {
+		if (lineStr.includes(specials[i])) {
+			return true
+		}
+	}
+	return false
+}
+
 function findPosition(char: string, targetChar: string, editor: vscode.TextEditor, selection: vscode.Selection, commentFilter: (lineStr: string) => string, isInsertToPreLine: boolean) {
-	const stack: string[] = []
-	stack.push(char)
+	const stack: string[] = [char]
 	let lineNumber = selection.start.line!
 	let sub = isInsertToPreLine ? 2 : 1
 	let lastLinePosition = selection.start.translate(-(sub))
@@ -183,9 +204,9 @@ function findPosition(char: string, targetChar: string, editor: vscode.TextEdito
 				if (stack.length === 0) {
 					flag = true
 					break
-				} else {
-					stack.push(targetChar)
 				}
+			} else {
+				stack.push(targetChar)
 			}
 		}
 		if (charIndex !== -1) {
