@@ -54,7 +54,7 @@ function handleInsert(isInsertToPreLine = false) {
 	if (!config.get<boolean>('enableAutoInsertComma', true)) {
 		return
 	}
-	const excludedEndChars = [',', '{', '[', '(', '>', '<', '.', ';', ':']
+	const excludedEndChars = [',', '{', '[', '(', '>', '<', '.', ';', ':', '+', '-', '*', '/', '%', '=', '?', '&', '|', '^']
 	let insertPosition = selection.start.translate(0, 1)
 	const line = editor.document.lineAt(isInsertToPreLine ? selection.start.translate(-1) : selection.start)
 	const languageId = editor.document.languageId
@@ -122,7 +122,7 @@ function handleInsert(isInsertToPreLine = false) {
 	let currentLineEndChar = lineStr[lineStr.length - 1]
 	let lastLineEndChar = lastLineStr[lastLineStr.length - 1]
 
-	if (hasSpecialStr(lineStr) || lineStr.endsWith('+')) {
+	if (hasSpecialStr(lineStr)) {
 		return
 	}
 
@@ -177,11 +177,14 @@ function insertComma(editor: vscode.TextEditor, position: vscode.Position) {
 }
 
 function hasSpecialStr(lineStr: string) {
-	const specials = ['=', '`', 'for(', 'for (', 'if(', 'if (', 'else {', 'do{', 'do {', 'while(', 'while (', 'switch(', 'switch (']
+	const specials = ['=', 'for(', 'for (', 'if(', 'if (', 'else {', 'do{', 'do {', 'while(', 'while (', 'switch(', 'switch (']
 	for (let i = 0; i < specials.length; i++) {
 		if (lineStr.includes(specials[i])) {
 			return true
 		}
+	}
+	if (lineStr.includes('`')) {
+		return lineStr.replace(/[^`]/g, '').length % 2 !== 0
 	}
 	return false
 }
