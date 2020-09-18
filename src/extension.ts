@@ -149,8 +149,8 @@ function handleInsert(isInsertToPreLine = false) {
 				if (lllStr.endsWith(',')) {
 					insertComma(editor, insertPosition)
 				} else if (lllStr.endsWith('{')) {
-					if (languageId.startsWith('typescript')) {
-						if (!lllStr.includes('interface ') && !lllStr.includes('class ')) {
+					if (isJavaScriptLikeLang(languageId)) {
+						if (!hasJavaScriptSpecialStr(lllStr)) {
 							insertComma(editor, insertPosition)
 						}
 					} else {
@@ -160,8 +160,8 @@ function handleInsert(isInsertToPreLine = false) {
 			}
 		}
 	} else if (isJsonLikeProp(lineStr) && lastLineEndChar === '{') {
-		if (languageId.startsWith('typescript')) {
-			if (!lastLineStr.includes('interface ') && !lastLineStr.includes('class ') && !lastLineStr.includes('type ')) {
+		if (isJavaScriptLikeLang(languageId)) {
+			if (!hasJavaScriptSpecialStr(lastLineStr)) {
 				insertComma(editor, insertPosition)
 			}
 		} else {
@@ -176,8 +176,16 @@ function insertComma(editor: vscode.TextEditor, position: vscode.Position) {
 	})
 }
 
+function isJavaScriptLikeLang(languageId: string) {
+	return languageId.startsWith('typescript') || languageId.startsWith('javascript')
+}
+
+function hasJavaScriptSpecialStr(preLineStr: string) {
+	return preLineStr.includes('interface ') || preLineStr.includes('class ') || preLineStr.includes('type ')
+}
+
 function hasSpecialStr(lineStr: string) {
-	const specials = ['=', 'for(', 'for (', 'if(', 'if (', 'else {', 'do{', 'do {', 'while(', 'while (', 'switch(', 'switch (']
+	const specials = ['=', 'for(', 'for (', 'if(', 'if (', 'else {', 'do{', 'do {', 'while(', 'while (', 'switch(', 'switch (', 'class ', 'interface ', 'constructor(', 'constructor (']
 	for (let i = 0; i < specials.length; i++) {
 		if (lineStr.includes(specials[i])) {
 			return true
@@ -185,6 +193,9 @@ function hasSpecialStr(lineStr: string) {
 	}
 	if (lineStr.includes('`')) {
 		return lineStr.replace(/[^`]/g, '').length % 2 !== 0
+	}
+	if (lineStr.includes('function ') && lineStr.indexOf(':') === -1) {
+		return true
 	}
 	return false
 }
