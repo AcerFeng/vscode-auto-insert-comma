@@ -8,6 +8,10 @@ Just `Enter` or `CMD(Ctrl) + Enter` in the file.
 
 ![Usage](images/usage.gif)
 
+## Installation
+
+[Auto Insert Comma](https://marketplace.visualstudio.com/items?itemName=LeonQin.auto-insert-comma)
+
 ## Extension Settings
 
 Default value.
